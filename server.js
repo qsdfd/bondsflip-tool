@@ -19,15 +19,17 @@ app.get('/summary', (req, res) => {
 
         axios.get(OSRS_GE_API_URL)
         .then(ge_api => {
-            let convert = Number(ge_api.data.item.current.price.slice(0, -1)) * 100000;
+            let convert = Math.round(Number(ge_api.data.item.current.price.slice(0, -1)) * 100000);
             buy = bond.overall_average - (convert/2);
             sell = bond.overall_average + (convert/2);
+            rest = bond.sell_quantity - bond.buy_quantity;
             factor = Number((bond.buy_quantity / bond.sell_quantity).toFixed(2));
 
             res.send({
                 calc : {
                     buy,
                     sell,
+                    rest,
                     factor
                 },
                 bond,
