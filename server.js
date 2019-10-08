@@ -7,14 +7,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const BOND_ID = "13190";
-const OSBUDDY_GR_PRICES_SUMMARY_GOOGLE_APIS_URL ="https://storage.googleapis.com/osbuddy-exchange/summary.json";
+// const OSBUDDY_GR_PRICES_SUMMARY_GOOGLE_APIS_URL ="https://storage.googleapis.com/osbuddy-exchange/summary.json";
+const OSBUDDY_GE_PRICES_SUMMARY_URL ="https://rsbuddy.com/exchange/summary.json";
 const OSRS_GE_API_URL = `https://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item=${BOND_ID}`;
 // const FIREBASE_FIXED_VALS_URL = 'https://bondsflip-tool.firebaseio.com/vals.json';
 
 app.get("/summary", (req, res) => {
     axios
         .all([
-            axios.get(OSBUDDY_GR_PRICES_SUMMARY_GOOGLE_APIS_URL),
+            axios.get(OSBUDDY_GE_PRICES_SUMMARY_URL),
             axios.get(OSRS_GE_API_URL),
             // axios.get(FIREBASE_FIXED_VALS_URL)
         ])
@@ -56,6 +57,8 @@ app.get("/summary", (req, res) => {
                 // fixed,
                 // fixed_margin
             });
+
+            res.send("ok")
         }))
         .catch(err => {
             res.send(err.message);
