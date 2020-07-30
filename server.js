@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 const BOND_ID = "13190";
 // const OSBUDDY_GR_PRICES_SUMMARY_GOOGLE_APIS_URL ="https://storage.googleapis.com/osbuddy-exchange/summary.json";
 const OSBUDDY_GE_PRICES_SUMMARY_URL ="https://rsbuddy.com/exchange/summary.json";
-const OSRS_GE_API_URL = `https://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item=${BOND_ID}`;
+const OSRS_GE_API_URL = `http://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item=13190`;
 // const FIREBASE_FIXED_VALS_URL = 'https://bondsflip-tool.firebaseio.com/vals.json';
 
 app.get("/summary", (req, res) => {
@@ -20,13 +20,13 @@ app.get("/summary", (req, res) => {
             // axios.get(FIREBASE_FIXED_VALS_URL)
         ])
         // .then(axios.spread((summary, ge_api, fixed_vals) => {
-        .then(axios.spread((summary, ge_api, fixed_vals) => {
+        .then(axios.spread((summary, ge_api) => {
             // let fixed = fixed_vals.data;
             let bond = summary.data[BOND_ID];
             let convert = Math.round(
                 Number(ge_api.data.item.current.price.slice(0, -1)) * 100000
             );
-            let isCalcReliable = bond && bond.overall_average && convert ? true : false;
+            // let isCalcReliable = bond && bond.overall_average && convert ? true : false;
 
             let floor = bond.overall_average - convert / 2;
             let ceil = bond.overall_average + convert / 2;
@@ -50,7 +50,7 @@ app.get("/summary", (req, res) => {
                     ceil,
                     rest,
                     factor,
-                    isCalcReliable
+                    // isCalcReliable
                 },
                 convert,
                 bond,
@@ -58,10 +58,11 @@ app.get("/summary", (req, res) => {
                 // fixed_margin
             });
 
-            res.send("ok")
+            res.send(bond)
         }))
         .catch(err => {
-            res.send(err.message);
+            res.send("err 1: " + err.message);
+            console.log(err)
         });
 });
 
